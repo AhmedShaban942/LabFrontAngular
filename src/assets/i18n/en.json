@@ -1,0 +1,50 @@
+{
+  "LOGIN": {
+    "TITLE": "Login",
+    "USERNAME": "Username",
+    "PASSWORD": "Password",
+    "USERNAME_REQUIRED": "Username is required",
+    "PASSWORD_REQUIRED": "Password is required",
+    "SUBMIT": "Submit",
+    "ERROR": "Login failed",
+    "SYSTEM": "Laboratory Management System",
+    "NO_ACCOUNT": "Don't have an account?",
+    "REGISTER": "Register now"
+  },
+  "HEADER": {
+    "BRAND": "Admin Dashboard",
+    "WELCOME": "Welcome",
+    "LOGOUT": "Logout",
+    "LANGUAGE": "Language"
+  },
+  "SIDEBAR": {
+    "HOME": "HOME",
+    "COMPANY": "COMPANY MANAGEMENT",
+    "REPORTS": "REPORTS"
+  },
+  "DASHBOARD": {
+  "WELCOME": "Welcome to the Dashboard",
+  "START_MANAGE": "You can start managing your company from here."
+},
+"COMPANY": {
+  "TITLE": "Company Management Dashboard",
+  "LIST": "Company List",
+  "AR_NAME": "Name in Arabic",
+  "EN_NAME": "Name in English",
+  "PHONE": "Phone",
+  "EMAIL": "Email",
+  "ADDRESS": "Address",
+  "IMAGE": "Image URL",
+  "NO_COMPANY": "No Companies",
+  "CONFIRM_DELETE": "Are you sure you want to delete?"
+},
+"ACTIONS":{
+  "ACTIONS": "Actions",
+    "ADD_NEW": "Add New",
+  "EDIT": "Edit",
+  "DELETE": "Delete",
+  "SAVE": "Save",
+  "CANCEL": "Cancel"
+}
+
+}

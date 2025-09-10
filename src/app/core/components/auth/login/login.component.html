@@ -1,0 +1,39 @@
+<div class="container vh-100 d-flex justify-content-center align-items-center">
+  <div class="card shadow-sm w-100" style="max-width: 400px;">
+    <div class="card-body p-4">
+      <h5 class="card-title mb-3 text-center">{{ 'LOGIN.TITLE' | translate }}</h5>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label class="form-label">{{ 'LOGIN.USERNAME' | translate }}</label>
+          <input class="form-control" formControlName="username" placeholder="{{ 'LOGIN.USERNAME' | translate }}" />
+          <div class="form-text text-danger" *ngIf="submitted && f.username.errors">
+            {{ 'LOGIN.USERNAME_REQUIRED' | translate }}
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">{{ 'LOGIN.PASSWORD' | translate }}</label>
+          <input type="password" class="form-control" formControlName="password" placeholder="••••••••" />
+          <div class="form-text text-danger" *ngIf="submitted && f.password.errors">
+            {{ 'LOGIN.PASSWORD_REQUIRED' | translate }}
+          </div>
+        </div>
+
+        <button class="btn btn-primary w-100" type="submit" [disabled]="loading">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+          {{ 'LOGIN.SUBMIT' | translate }}
+        </button>
+
+        <div class="alert alert-danger mt-3 py-2" *ngIf="error">
+          {{ 'LOGIN.ERROR' | translate }}: {{ error }}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<p class="text-center mt-3 small text-muted">{{ 'LOGIN.SYSTEM' | translate }}</p>
+<div class="mt-2 text-center">
+  <p>{{ 'LOGIN.NO_ACCOUNT' | translate }} <a routerLink="/register">{{ 'LOGIN.REGISTER' | translate }}</a></p>
+</div>

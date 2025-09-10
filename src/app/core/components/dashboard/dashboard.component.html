@@ -1,0 +1,14 @@
+<!-- dashboard-layout.component.html -->
+<div class="d-flex">
+  <!-- Sidebar -->
+  <app-sidebar *ngIf="isSidebarOpen"></app-sidebar>
+
+  <!-- Main Content -->
+  <div class="flex-grow-1">
+    <app-header (toggleSidebar)="toggleSidebar()"></app-header>
+
+    <main class="container-fluid mt-3">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
