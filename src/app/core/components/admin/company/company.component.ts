@@ -1,9 +1,11 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CompanyService } from '../../../services/company/company.service';
 import { Company } from '../../../models/company/company.model';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { BaseComponent } from '../../BaseComponent';
+
 
 @Component({
   selector: 'app-company',
@@ -12,18 +14,23 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
   templateUrl: './company.component.html',
   styleUrls: ['./company.component.css']
 })
-export class CompanyComponent implements OnInit {
+export class CompanyComponent extends BaseComponent {
   private translate = inject(TranslateService);
 
   companies = signal<Company[]>([]);
   selectedCompany = signal<Company | null>(null);
 
-  constructor(private companyService: CompanyService) {}
+  constructor(private companyService: CompanyService) {
+    super(); // ⚡ مهم عند الوراثة
+  }
 
-  ngOnInit(): void {
+  override ngOnInit(): void { // 👈 استخدم override
+    super.ngOnInit();        // ⚡ تهيئة الصلاحيات في BaseComponent
     this.loadCompanies();
+    this.initializePermissions('ManageCompany'); // ⚡ هذا يحدد الصلاحيات الخاصة بالـ Company
     this.translate.use(this.translate.currentLang);
   }
+
 
   loadCompanies() {
     this.companyService.getAll().subscribe({
@@ -33,7 +40,7 @@ export class CompanyComponent implements OnInit {
   }
 
   selectCompany(company: Company) {
-    this.selectedCompany.set({...company});
+    this.selectedCompany.set({ ...company });
   }
 
   saveCompany() {

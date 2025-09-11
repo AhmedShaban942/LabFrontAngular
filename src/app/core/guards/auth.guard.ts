@@ -11,17 +11,29 @@ export const authGuard: CanActivateFn = (
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  // إذا المستخدم مسجّل دخول والتوكن صالح
+  // 👇 أقرأ البيانات المطلوبة من route (roles / permissions)
+  const requiredRoles = route.data['roles'] as string[] | undefined;
+  const requiredPermissions = route.data['permissions'] as string[] | undefined;
+
+  // ✅ لو المستخدم مسجل دخول والتوكن صالح
   if (authService.isAuthenticated()) {
+    if (!hasAccess(authService, requiredRoles, requiredPermissions)) {
+      router.navigate(['/forbidden']);
+      return false;
+    }
     return true;
   }
 
-  // إذا التوكن موجود لكنه منتهي، حاول التجديد
+  // ✅ لو التوكن موجود لكنه منتهي → جرب التجديد
   if (authService.token()) {
     return authService.refreshToken().pipe(
       switchMap(success => {
         if (success) {
-          return of(true); // التجديد ناجح، سمح بالدخول
+          if (!hasAccess(authService, requiredRoles, requiredPermissions)) {
+            router.navigate(['/forbidden']);
+            return of(false);
+          }
+          return of(true);
         } else {
           router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
           return of(false);
@@ -30,7 +42,22 @@ export const authGuard: CanActivateFn = (
     );
   }
 
-  // إذا لا يوجد توكن أو لا يمكن التجديد
+  // 🚫 لا يوجد توكن أو فشل التجديد → توجيه للـ login
   router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
   return false;
 };
+
+// 🔹 دالة مساعدة لفحص الوصول
+function hasAccess(authService: AuthService, roles?: string[], permissions?: string[]): boolean {
+  // تحقق من الأدوار
+  if (roles && !roles.some(r => authService.roles().includes(r))) {
+    return false;
+  }
+
+  // تحقق من الصلاحيات
+  if (permissions && !permissions.some(p => authService.permissions().includes(p))) {
+    return false;
+  }
+
+  return true;
+}

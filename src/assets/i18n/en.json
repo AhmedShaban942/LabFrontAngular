@@ -20,31 +20,67 @@
   "SIDEBAR": {
     "HOME": "HOME",
     "COMPANY": "COMPANY MANAGEMENT",
-    "REPORTS": "REPORTS"
+    "COMPANY_LIST": "Company List",
+    "ADD_COMPANY": "Add Company",
+    "LABS": "LAB MANAGEMENT",
+    "USERS": "USER MANAGEMENT",
+    "USER_LIST": "User List",
+    "ADD_USER": "Add User",
+    "ROLES": "ROLE MANAGEMENT",
+    "ROLE_LIST": "Role List",
+    "SETTINGS": "SETTINGS",
+    "REPORTS": "REPORTS",
+    "CLAIMS": "MANAGE CLAIMS"
   },
   "DASHBOARD": {
-  "WELCOME": "Welcome to the Dashboard",
-  "START_MANAGE": "You can start managing your company from here."
-},
-"COMPANY": {
-  "TITLE": "Company Management Dashboard",
-  "LIST": "Company List",
-  "AR_NAME": "Name in Arabic",
-  "EN_NAME": "Name in English",
-  "PHONE": "Phone",
-  "EMAIL": "Email",
-  "ADDRESS": "Address",
-  "IMAGE": "Image URL",
-  "NO_COMPANY": "No Companies",
-  "CONFIRM_DELETE": "Are you sure you want to delete?"
-},
-"ACTIONS":{
-  "ACTIONS": "Actions",
+    "WELCOME": "Welcome to the Dashboard",
+    "START_MANAGE": "You can start managing your company from here."
+  },
+  "COMPANY": {
+    "TITLE": "Company Management Dashboard",
+    "LIST": "Company List",
+    "AR_NAME": "Name in Arabic",
+    "EN_NAME": "Name in English",
+    "PHONE": "Phone",
+    "EMAIL": "Email",
+    "ADDRESS": "Address",
+    "IMAGE": "Image URL",
+    "NO_COMPANY": "No Companies",
+    "CONFIRM_DELETE": "Are you sure you want to delete?"
+  },
+  "USERS": {
+    "TITLE": "User Management",
+    "LIST": "User List",
+    "USERNAME": "Username",
+    "FULLNAME": "Full Name",
+    "EMAIL": "Email",
+    "ROLES": "Roles",
+    "NO_USERS": "No Users",
+    "CONFIRM_DELETE": "Are you sure you want to delete this user?",
+    "MANAGE_ROLE": "Manage Role"
+  },
+  "ROLES": {
+    "TITLE": "Role Management",
+    "LIST": "Role List",
+    "NAME": "Role Name",
+    "NO_ROLES": "No Roles",
+    "CONFIRM_DELETE": "Are you sure you want to delete this role?",
+    "MANAGE_CLAIMS": "Manage Claims"
+  },
+  "CLAIMS": {
+    "TITLE": "Claims Management",
+    "SELECT_ROLE": "Select Role",
+    "SAVE": "Save Claims",
+    "SAVED": "Claims saved successfully",
+    "NO_CLAIMS": "No Claims available"
+  },
+  "ACTIONS": {
+    "ACTIONS": "Actions",
     "ADD_NEW": "Add New",
-  "EDIT": "Edit",
-  "DELETE": "Delete",
-  "SAVE": "Save",
-  "CANCEL": "Cancel"
-}
-
+    "EDIT": "Edit",
+    "DELETE": "Delete",
+    "SAVE": "Save",
+    "CANCEL": "Cancel",
+    "SELECT_ALL": "Select All"
+  }
 }

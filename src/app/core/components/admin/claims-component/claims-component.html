@@ -1,0 +1,60 @@
+<div class="container mt-4">
+  <h2 class="mb-4">{{ 'CLAIMS.TITLE' | translate }}</h2>
+
+  <!-- اختيار الدور -->
+  <div class="mb-3">
+    <label class="form-label">{{ 'CLAIMS.SELECT_ROLE' | translate }}</label>
+    <select class="form-select w-auto" (change)="selectRoleById($event)">
+      <option value="">{{ 'CLAIMS.SELECT_ROLE' | translate }}</option>
+      <option *ngFor="let r of roles()" [value]="r.id">{{ r.name }}</option>
+    </select>
+  </div>
+
+  <!-- عرض الـ Claims كـ شجرة -->
+  <div *ngIf="selectedRole() as role">
+    <h4 class="mt-3">{{ role.name }}</h4>
+
+    <div class="accordion" id="claimsAccordion">
+      <div class="accordion-item" *ngFor="let group of groupedClaims()">
+        <h2 class="accordion-header" [id]="'heading-' + group.module">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                  [attr.data-bs-target]="'#collapse-' + group.module"
+                  aria-expanded="false" [attr.aria-controls]="'collapse-' + group.module">
+            {{ group.module }}
+          </button>
+        </h2>
+        <div [id]="'collapse-' + group.module" class="accordion-collapse collapse"
+             [attr.aria-labelledby]="'heading-' + group.module"
+             data-bs-parent="#claimsAccordion">
+          <div class="accordion-body">
+
+            <!-- ✅ اختيار الكل -->
+            <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox"
+       [checked]="isAllSelected(group)"
+       [indeterminate]="isIndeterminate(group)"
+       (change)="toggleGroup(group, $event)" />
+
+              <label class="form-check-label fw-bold">
+                {{ 'ACTIONS.SELECT_ALL' | translate }}
+              </label>
+            </div>
+
+            <!-- Claims الفردية -->
+            <div class="form-check ms-3" *ngFor="let claim of group.claims">
+              <input class="form-check-input" type="checkbox"
+                     [checked]="claim.selected"
+                     (change)="toggleClaim(claim)" />
+              <label class="form-check-label">{{ claim.displayName }}</label>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-success mt-3" *ngIf="canEdit" (click)="saveClaims()">
+      {{ 'ACTIONS.SAVE' | translate }}
+    </button>
+  </div>
+</div>

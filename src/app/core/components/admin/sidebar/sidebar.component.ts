@@ -1,41 +1,51 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LanguageService } from '../../../services/language.service';
-
-
-interface MenuItem {
-  labelKey: string; // المفتاح للترجمة
-  route: string;
-  roles: string[];
-}
+import { SidebarItemComponent, MenuItem } from '../../sidebar-item-component/sidebar-item-component';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslateModule],
+  imports: [CommonModule, TranslateModule, SidebarItemComponent],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css']
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
   private translate = inject(TranslateService);
   private languageService = inject(LanguageService);
 
-  userRole = 'Admin'; // تجيبها من الـ AuthService بعد تسجيل الدخول
-
   menuItems: MenuItem[] = [
-    { labelKey: 'SIDEBAR.HOME', route: '/admin', roles: ['Admin', 'User'] },
-    { labelKey: 'SIDEBAR.COMPANY', route: '/admin/company', roles: ['Admin'] },
-    { labelKey: 'SIDEBAR.REPORTS', route: '/admin/reports', roles: ['Admin', 'Manager'] }
+    { labelKey: 'SIDEBAR.HOME', route: '/admin', roles: ['Admin', 'User'], icon: 'bi bi-house' },
+    {
+      labelKey: 'SIDEBAR.COMPANY',
+      permissions: ['ManageCompany.View'],
+      icon: 'bi bi-building',
+      children: [
+        { labelKey: 'SIDEBAR.COMPANY_LIST', route: '/admin/company', permissions: ['ManageCompany.View'], icon: 'bi bi-list' }
+      ]
+    },
+    {
+      labelKey: 'SIDEBAR.USERS',
+      permissions: ['ManageUsers.View'],
+      icon: 'bi bi-people',
+      children: [
+        { labelKey: 'SIDEBAR.USERS', route: '/admin/users', permissions: ['ManageUsers.View'], icon: 'bi bi-list' },
+        { labelKey: 'SIDEBAR.ROLES', route: '/admin/roles', permissions: ['ManageRoles.View'], icon: 'bi bi-shield-lock' },
+        { labelKey: 'SIDEBAR.CLAIMS', route: '/admin/claims', permissions: ['ManageRoles.View'], icon: 'bi bi-key' } // ✅ Claims
+      ]
+    },
+    {
+      labelKey: 'SIDEBAR.REPORTS',
+      permissions: ['ViewReports'],
+      icon: 'bi bi-bar-chart',
+      children: [
+        { labelKey: 'SIDEBAR.REPORTS_VIEW', route: '/admin/reports', permissions: ['ViewReports'], icon: 'bi bi-file-earmark-text' }
+      ]
+    }
   ];
 
-  get filteredMenu() {
-    return this.menuItems.filter(item => item.roles.includes(this.userRole));
-  }
-
   ngOnInit() {
-    // تفعيل اللغة الحالية عند بدء المكون
     this.translate.use(this.languageService.getCurrentLang());
   }
 }

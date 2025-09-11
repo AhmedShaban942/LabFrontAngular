@@ -1,0 +1,92 @@
+<div class="container mt-4">
+  <h2 class="mb-4">{{ 'USERS.TITLE' | translate }}</h2>
+
+  <button class="btn btn-primary mb-3" *ngIf="canAdd" (click)="addUser()">
+    ➕ {{ 'ACTIONS.ADD_NEW' | translate }}
+  </button>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title">{{ 'USERS.LIST' | translate }}</h5>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th>{{ 'USERS.USERNAME' | translate }}</th>
+              <th>{{ 'USERS.FULLNAME' | translate }}</th>
+              <th>{{ 'USERS.EMAIL' | translate }}</th>
+              <th class="text-center">{{ 'USERS.ROLES' | translate }}</th>
+              <th class="text-center">{{ 'ACTIONS.ACTIONS' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let u of users()">
+              <td>{{ u.userName }}</td>
+              <td>{{ u.fullName }}</td>
+              <td>{{ u.email }}</td>
+              <td>
+                <div class="d-flex flex-wrap align-items-center gap-1">
+                  <!-- عرض الأدوار الحالية -->
+                  <span *ngFor="let role of u.roles" class="badge bg-primary d-flex align-items-center">
+                    {{ role }}
+                    <button type="button" class="btn-close btn-close-white btn-sm ms-1" aria-label="Remove"
+                      (click)="removeRoleFromUser(u, role)"></button>
+                  </span>
+
+                  <!-- اختيار دور جديد -->
+                  <select class="form-select form-select-sm w-auto" (change)="onRoleSelect(u, $event)">
+                    <option value="">{{ 'CLAIMS.SELECT_ROLE' | translate }}</option>
+                    <option *ngFor="let r of allRoles()" [value]="r.name" [disabled]="u.roles.includes(r.name)">
+                      {{ r.name }}
+                    </option>
+                  </select>
+                </div>
+              </td>
+
+              <td class="text-center">
+                <button class="btn btn-sm btn-warning me-2" *ngIf="canEdit" (click)="selectUser(u)">
+                  ✏ {{ 'ACTIONS.EDIT' | translate }}
+                </button>
+                <button class="btn btn-sm btn-danger me-2" *ngIf="canDelete" (click)="deleteUser(u.id)">
+                  🗑 {{ 'ACTIONS.DELETE' | translate }}
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal لإضافة/تعديل المستخدم -->
+<div class="modal fade" id="userModal" tabindex="-1" aria-hidden="true" *ngIf="selectedUser() as user">
+  <div class="modal-dialog modal-lg">
+    <form (ngSubmit)="saveUser()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ user.id ? ('ACTIONS.EDIT' | translate) : ('ACTIONS.ADD_NEW' | translate) }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">{{ 'USERS.USERNAME' | translate }}</label>
+            <input [(ngModel)]="user.userName" name="userName" class="form-control" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">{{ 'USERS.FULLNAME' | translate }}</label>
+            <input [(ngModel)]="user.fullName" name="fullName" class="form-control" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">{{ 'USERS.EMAIL' | translate }}</label>
+            <input [(ngModel)]="user.email" name="email" type="email" class="form-control" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">{{ 'ACTIONS.SAVE' | translate }}</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'ACTIONS.CANCEL' | translate }}</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

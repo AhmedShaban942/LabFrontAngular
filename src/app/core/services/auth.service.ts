@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { LoginRequest } from '../models/login/login-request.model';
 import { LoginData } from '../models/login/login-data.model';
@@ -7,7 +7,17 @@ import { RegisterRequest } from '../models/register/register-request.model';
 import { RegisterData } from '../models/register/register-data.model';
 import { ApiResponse } from '../models/api-response.model';
 import { Router } from '@angular/router';
-import { Observable, of, catchError, map, tap, switchMap, throwError } from 'rxjs';
+import { Observable, of, catchError, map, tap } from 'rxjs';
+import {jwtDecode} from 'jwt-decode';
+
+interface JwtPayload {
+  sub?: string;
+  // 👇 عندك الـ Role بيجي من claim مختلفة
+  "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"?: string | string[];
+  Permission?: string[];
+  exp?: number;
+  [key: string]: any;
+}
 
 const TOKEN_KEY = 'auth_token';
 const REFRESH_KEY = 'refresh_token';
@@ -35,8 +45,7 @@ export class AuthService {
   // 🔹 Handle Login/Register Success
   handleAuthSuccess(res: ApiResponse<LoginData | RegisterData>) {
     if (res.succeeded && res.data?.token) {
-      const d = res.data;
-      this.storeAuthData(d);
+      this.storeAuthData(res.data);
       this.router.navigate(['/admin']);
     }
   }
@@ -51,39 +60,33 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
-  // 🔹 Check if token expired
-  isTokenExpired(): boolean {
-    const d = this._user();
-    if (!d || !d.tokenExpires) return true;
-    return new Date(d.tokenExpires) <= new Date();
-  }
-
   // 🔹 Refresh Token
-refreshToken(): Observable<boolean> {
-  const refresh = localStorage.getItem(REFRESH_KEY);
-  if (!refresh) {
-    this.logout();
-    return of(false);
-  }
-
-  const url = `${environment.apiBase}/api/auth/refresh-token`;
-  const body = { refreshToken: refresh }; // 👈 هذا هو التعديل المهم
-
-  return this.http.post<ApiResponse<LoginData | RegisterData>>(url, body).pipe(
-    tap(res => {
-      if (res.succeeded && res.data?.token) {
-        this.storeAuthData(res.data);
-      } else {
-        this.logout();
-      }
-    }),
-    map(res => res.succeeded),
-    catchError(() => {
+  refreshToken(): Observable<boolean> {
+    const refresh = localStorage.getItem(REFRESH_KEY);
+    if (!refresh) {
       this.logout();
       return of(false);
-    })
-  );
-}
+    }
+
+    const url = `${environment.apiBase}/api/auth/refresh-token`;
+    const body = { refreshToken: refresh };
+
+    return this.http.post<ApiResponse<LoginData | RegisterData>>(url, body).pipe(
+      tap(res => {
+        if (res.succeeded && res.data?.token) {
+          this.storeAuthData(res.data);
+        } else {
+          this.logout();
+        }
+      }),
+      map(res => res.succeeded),
+      catchError(() => {
+        this.logout();
+        return of(false);
+      })
+    );
+  }
+
   // 🔹 Helper to store auth data
   private storeAuthData(data: LoginData | RegisterData) {
     localStorage.setItem(TOKEN_KEY, data.token);
@@ -91,6 +94,15 @@ refreshToken(): Observable<boolean> {
     localStorage.setItem(USER_KEY, JSON.stringify(data));
     this._token.set(data.token);
     this._user.set(data);
+  }
+
+  // 🔹 Decode JWT
+  private decodeToken(token: string): JwtPayload | null {
+    try {
+      return jwtDecode<JwtPayload>(token);
+    } catch {
+      return null;
+    }
   }
 
   // 🔹 Token getter
@@ -105,13 +117,29 @@ refreshToken(): Observable<boolean> {
 
   // 🔹 Roles getter
   roles(): string[] {
-    return this._user()?.roles || [];
+    const payload = this._token() ? this.decodeToken(this._token()!) : null;
+    const rawRoles = payload?.["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+
+    if (!rawRoles) return [];
+    return Array.isArray(rawRoles) ? rawRoles : [rawRoles];
   }
 
+  // 🔹 Permissions getter
+  permissions(): string[] {
+    const payload = this._token() ? this.decodeToken(this._token()!) : null;
+    return payload?.Permission || [];
+  }
+
+  // 🔹 Check if token expired
+  isTokenExpired(): boolean {
+    const payload = this._token() ? this.decodeToken(this._token()!) : null;
+    if (!payload?.exp) return true;
+    return Date.now() >= payload.exp * 1000;
+  }
+
+  // 🔹 Check authentication
   isAuthenticated(): boolean {
-    const d = this._user();
-    if (!d) return false;
-    return new Date(d.tokenExpires) > new Date();
+    return !!this._token() && !this.isTokenExpired();
   }
 
   // 🔹 Private helpers
