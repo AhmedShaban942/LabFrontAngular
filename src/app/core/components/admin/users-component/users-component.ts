@@ -66,12 +66,14 @@ export class UsersComponent extends BaseComponent implements OnInit {
     });
   }
 
+
   deleteUser(id: string) {
-    if (!confirm(this.translate.instant('USERS.CONFIRM_DELETE'))) return;
-    this.userService.deleteUser(id).subscribe(res => {
-      if(res.succeeded) this.loadUsers();
-    });
-  }
+  if (!confirm(this.translate.instant('USERS.CONFIRM_DELETE'))) return;
+  this.userService.deleteUser(id).subscribe(res => {
+    if(res.succeeded) this.loadUsers();
+  });
+}
+
 
   // إدارة الأدوار المتعددة
   assignRoleToUser(user: AppUser, roleId: string) {
@@ -94,4 +96,5 @@ export class UsersComponent extends BaseComponent implements OnInit {
     const roleId = select.value;
     this.assignRoleToUser(user, roleId);
   }
+
 }

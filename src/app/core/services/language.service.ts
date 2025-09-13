@@ -11,13 +11,17 @@ export class LanguageService {
   currentLang$ = this.lang$.asObservable();
 
   constructor(private translate: TranslateService) {
-    // تعيين اللغة الافتراضية عند بدء التطبيق
+    // قراءة اللغة المحفوظة من localStorage
+    const savedLang = localStorage.getItem('lang') as 'ar' | 'en' || 'ar';
+    this.lang$.next(savedLang);
     this.translate.setDefaultLang('ar');
-    this.useLang('ar');
+    this.translate.use(savedLang);
+    document.documentElement.dir = savedLang === 'ar' ? 'rtl' : 'ltr';
   }
 
   useLang(lang: 'ar' | 'en') {
     this.lang$.next(lang);
+    localStorage.setItem('lang', lang); // حفظ اللغة
     this.translate.use(lang);
     document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
   }

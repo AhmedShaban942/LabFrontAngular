@@ -1,14 +1,25 @@
 <!-- dashboard-layout.component.html -->
-<div class="d-flex">
+
+
+
+<div class="wrapper d-flex">
   <!-- Sidebar -->
   <app-sidebar *ngIf="isSidebarOpen"></app-sidebar>
 
-  <!-- Main Content -->
-  <div class="flex-grow-1">
+  <!-- Content Wrapper -->
+  <div class="main flex-grow-1 d-flex flex-column">
+    <!-- Header -->
     <app-header (toggleSidebar)="toggleSidebar()"></app-header>
 
-    <main class="container-fluid mt-3">
+    <!-- Main Content -->
+    <main class="content p-3 flex-grow-1">
       <router-outlet></router-outlet>
     </main>
+
+    <!-- Footer -->
+    <footer class="footer bg-light text-center py-2">
+      <small>© 2025 - Admin Dashboard</small>
+    </footer>
   </div>
 </div>
+

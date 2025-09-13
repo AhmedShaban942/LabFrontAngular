@@ -3,7 +3,8 @@
   <a
     *ngIf="!item.children || item.children.length === 0"
     [routerLink]="item.route"
-    [ngClass]="{ 'active': isActiveRoute(item.route), 'nav-link': true, 'link-dark': true }"
+    routerLinkActive="active"
+    [ngClass]="{ 'active': isActiveRoute(item.route), 'nav-link': true, 'text-white': true }"
   >
     <i *ngIf="item.icon" class="{{ item.icon }} me-2"></i>
     {{ item.labelKey | translate }}
@@ -11,9 +12,11 @@
 
   <!-- عنصر يحتوي على children -->
   <div *ngIf="item.children && item.children.length > 0" class="nav-item">
-    <a href="javascript:void(0)" class="nav-link link-dark d-flex justify-content-between align-items-center"
+    <a href="javascript:void(0)" class="nav-link text-white d-flex justify-content-between align-items-center"
        (click)="toggle(item)">
-      <span><i *ngIf="item.icon" class="{{ item.icon }} me-2"></i>{{ item.labelKey | translate }}</span>
+      <span>
+        <i *ngIf="item.icon" class="{{ item.icon }} me-2"></i>{{ item.labelKey | translate }}
+      </span>
       <i class="bi" [ngClass]="{ 'bi-caret-down-fill': item.isOpen, 'bi-caret-right-fill': !item.isOpen }"></i>
     </a>
     <ul *ngIf="item.isOpen" class="nav flex-column ms-3">

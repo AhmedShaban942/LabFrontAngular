@@ -15,21 +15,28 @@ import { LanguageService } from '../../../services/language.service';
   styleUrl: './header-component.css'
 })
 export class HeaderComponent {
- @Output() toggleSidebar = new EventEmitter<void>();
+  @Output() toggleSidebar = new EventEmitter<void>();
   auth = inject(AuthService);
   languageService = inject(LanguageService);
 
-  currentLang = this.languageService.getCurrentLang();
+  currentLang: 'ar' | 'en' = this.languageService.getCurrentLang();
+
+  constructor() {
+    // الاستماع للتغيرات التلقائية للغة
+    this.languageService.currentLang$.subscribe(lang => {
+      this.currentLang = lang;
+    });
+  }
 
   switchLang(lang: 'ar' | 'en') {
     this.languageService.useLang(lang);
-    this.currentLang = lang;
   }
+
   logout() {
     this.auth.logout();
   }
 
-    authUser() {
+  authUser() {
     return this.auth.user();
   }
 }

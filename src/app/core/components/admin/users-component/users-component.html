@@ -1,10 +1,9 @@
 <div class="container mt-4">
   <h2 class="mb-4">{{ 'USERS.TITLE' | translate }}</h2>
 
-  <button class="btn btn-primary mb-3" *ngIf="canAdd" (click)="addUser()">
+  <button class="btn btn-primary mb-3" *ngIf="canAdd" data-bs-toggle="modal" data-bs-target="#userModal" (click)="addUser()">
     ➕ {{ 'ACTIONS.ADD_NEW' | translate }}
   </button>
-
   <div class="card shadow-sm">
     <div class="card-body">
       <h5 class="card-title">{{ 'USERS.LIST' | translate }}</h5>
@@ -44,7 +43,7 @@
               </td>
 
               <td class="text-center">
-                <button class="btn btn-sm btn-warning me-2" *ngIf="canEdit" (click)="selectUser(u)">
+                <button class="btn btn-sm btn-warning me-2" data-bs-toggle="modal" data-bs-target="#userModal" *ngIf="canEdit" (click)="selectUser(u)">
                   ✏ {{ 'ACTIONS.EDIT' | translate }}
                 </button>
                 <button class="btn btn-sm btn-danger me-2" *ngIf="canDelete" (click)="deleteUser(u.id)">
@@ -58,6 +57,8 @@
     </div>
   </div>
 </div>
+
+
 
 <!-- Modal لإضافة/تعديل المستخدم -->
 <div class="modal fade" id="userModal" tabindex="-1" aria-hidden="true" *ngIf="selectedUser() as user">
