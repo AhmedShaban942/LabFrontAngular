@@ -10,6 +10,7 @@ import { ForbiddenComponent } from './core/components/forbidden-component/forbid
 import { UsersComponent } from './core/components/admin/users-component/users-component';
 import { RolesComponent } from './core/components/admin/roles-component/roles-component';
 import { ClaimsComponent } from './core/components/admin/claims-component/claims-component';
+import { ComplexComponent } from './core/components/admin/complex-component/complex-component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -25,16 +26,44 @@ export const routes: Routes = [
       { path: '', component: DashboardHomeComponent },
 
       // Company
-      { path: 'company', component: CompanyComponent, canActivate: [authGuard], data: { permissions: ['ManageCompany.View'] } },
+      { 
+        path: 'company', 
+        component: CompanyComponent, 
+        canActivate: [authGuard], 
+        data: { permissions: ['ManageCompany.View'] } 
+      },
 
       // Users
-      { path: 'users', component: UsersComponent, canActivate: [authGuard], data: { permissions: ['ManageUsers.View'] } },
+      { 
+        path: 'users', 
+        component: UsersComponent, 
+        canActivate: [authGuard], 
+        data: { permissions: ['ManageUsers.View'] } 
+      },
 
       // Roles
-      { path: 'roles', component: RolesComponent, canActivate: [authGuard], data: { permissions: ['ManageRoles.View'] } },
+      { 
+        path: 'roles', 
+        component: RolesComponent, 
+        canActivate: [authGuard], 
+        data: { permissions: ['ManageRoles.View'] } 
+      },
 
       // Claims
-      { path: 'claims', component: ClaimsComponent, canActivate: [authGuard], data: { permissions: ['ManageRoles.View'] } },
+      { 
+        path: 'claims', 
+        component: ClaimsComponent, 
+        canActivate: [authGuard], 
+        data: { permissions: ['ManageRoles.View'] } 
+      },
+
+      // Complex
+      { 
+        path: 'complex', 
+        component: ComplexComponent, 
+        canActivate: [authGuard], 
+        data: { permissions: ['ManageComplex.View'] } 
+      },
     ]
   },
 

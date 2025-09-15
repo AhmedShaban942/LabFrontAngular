@@ -1,0 +1,18 @@
+<nav *ngIf="totalPages() > 1">
+  <ul class="pagination justify-content-center">
+    <li class="page-item" [class.disabled]="pageNumber === 1">
+      <a class="page-link" (click)="changePage(pageNumber - 1)">«</a>
+    </li>
+
+    <li
+      class="page-item"
+      *ngFor="let p of pages()"
+      [class.active]="p === pageNumber">
+      <a class="page-link" (click)="changePage(p)">{{ p }}</a>
+    </li>
+
+    <li class="page-item" [class.disabled]="pageNumber === totalPages()">
+      <a class="page-link" (click)="changePage(pageNumber + 1)">»</a>
+    </li>
+  </ul>
+</nav>

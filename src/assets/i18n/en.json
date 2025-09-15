@@ -20,7 +20,9 @@
   "SIDEBAR": {
     "HOME": "HOME",
     "COMPANY": "COMPANY MANAGEMENT",
+    "COMPLEX": "COMPLEX MANAGEMENT",
     "COMPANY_LIST": "Company List",
+    "Complex_LIST": "Complex List",
     "ADD_COMPANY": "Add Company",
     "LABS": "LAB MANAGEMENT",
     "USERS": "USER MANAGEMENT",
@@ -47,6 +49,22 @@
     "IMAGE": "Image URL",
     "NO_COMPANY": "No Companies",
     "CONFIRM_DELETE": "Are you sure you want to delete?"
+  },
+  "COMPLEX": {
+  "TITLE": "Complex Management",
+  "LIST": "Complex List",
+  "AR_NAME": "Name in Arabic",
+  "EN_NAME": "Name in English",
+  "PHONE": "Phone",
+  "EMAIL": "Email",
+  "ADDRESS": "Address",
+  "COMPANY": "Company",
+  "IMAGE": "Image URL",
+  "SEARCH": "Search",
+  "SORT_BY": "Sort By",
+  "PAGE_SIZE": "Items per page ",
+  "NO_COMPLEX": "No Complexes",
+  "CONFIRM_DELETE": "Are you sure you want to delete?"
   },
   "USERS": {
     "TITLE": "User Management",

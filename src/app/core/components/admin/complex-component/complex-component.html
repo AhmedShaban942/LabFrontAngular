@@ -1,0 +1,144 @@
+<div class="content-wrapper p-3">
+  <section class="content">
+    <div class="container-fluid">
+      <div class="card card-primary card-outline">
+        <!-- Header -->
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h3 class="card-title">
+            <i class="fas fa-building me-2"></i> {{ 'COMPLEX.TITLE' | translate }}
+          </h3>
+          <button class="btn btn-success btn-sm" *ngIf="canAdd" data-bs-toggle="modal" data-bs-target="#complexModal" (click)="addComplex()">
+            <i class="fas fa-plus"></i> {{ 'ACTIONS.ADD_NEW' | translate }}
+          </button>
+        </div>
+
+        <!-- Body -->
+        <div class="card-body">
+          <div class="d-flex flex-wrap gap-2 mb-3">
+            <!-- Search -->
+            <input type="text" class="form-control w-auto" placeholder="{{ 'COMPLEX.SEARCH' | translate }}"
+              [ngModel]="searchText()" (ngModelChange)="onSearchChange($event)">
+
+            <!-- Page Size -->
+            <div class="d-flex align-items-center gap-2">
+              <label class="mb-0">{{ 'COMPLEX.PAGE_SIZE' | translate }}</label>
+              <select class="form-select" [value]="pageSize()" (change)="onPageSizeChange($event)">
+                <option [value]="5">5</option>
+                <option [value]="10">10</option>
+                <option [value]="20">20</option>
+                <option [value]="50">50</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover table-sm">
+              <thead class="bg-primary text-white">
+                <tr>
+                  <th (click)="sort('compArName')" style="cursor:pointer">
+                    {{ 'COMPLEX.AR_NAME' | translate }}
+                    <i [class]="getSortIcon('compArName')"></i>
+                  </th>
+                  <th (click)="sort('compEnName')" style="cursor:pointer">
+                    {{ 'COMPLEX.EN_NAME' | translate }}
+                    <i [class]="getSortIcon('compEnName')"></i>
+                  </th>
+                  <th>{{ 'COMPLEX.PHONE' | translate }}</th>
+                  <th>{{ 'COMPLEX.EMAIL' | translate }}</th>
+                  <th>{{ 'COMPLEX.ADDRESS' | translate }}</th>
+                  <th>{{ 'COMPLEX.COMPANY' | translate }}</th>
+                  <th class="text-center">{{ 'ACTIONS.ACTIONS' | translate }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let c of complexes()">
+                  <td>{{ c.compArName }}</td>
+                  <td>{{ c.compEnName }}</td>
+                  <td>{{ c.compPhon }}</td>
+                  <td>{{ c.compEmail }}</td>
+                  <td>{{ c.compAddress }}</td>
+                  <td>{{ getCompanyNameById(c.compComId) }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-warning btn-sm me-2" *ngIf="canEdit" data-bs-toggle="modal" data-bs-target="#complexModal" (click)="selectComplex(c)">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-danger btn-sm" *ngIf="canDelete" (click)="deleteComplex(c.id)">
+                      <i class="fas fa-trash-alt"></i>
+                    </button>
+                  </td>
+                </tr>
+                <tr *ngIf="complexes().length === 0">
+                  <td colspan="7" class="text-center text-muted">{{ 'COMPLEX.NO_COMPLEX' | translate }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          <div class="mt-3 d-flex justify-content-end">
+            <app-pagination
+              [pageNumber]="pageNumber()"
+              [pageSize]="pageSize()"
+              [totalCount]="totalCount()"
+              (pageChange)="onPageChange($event)">
+            </app-pagination>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="complexModal" tabindex="-1" aria-labelledby="complexModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content" *ngIf="selectedComplex() as complex">
+      <form (ngSubmit)="saveComplex()">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title">
+            <i class="fas fa-building me-2"></i>
+            {{ complex.id ? ('ACTIONS.EDIT' | translate) : ('ACTIONS.ADD_NEW' | translate) }}
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">{{ 'COMPLEX.AR_NAME' | translate }}</label>
+            <input [(ngModel)]="complex.compArName" name="compArName" class="form-control" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">{{ 'COMPLEX.EN_NAME' | translate }}</label>
+            <input [(ngModel)]="complex.compEnName" name="compEnName" class="form-control" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">{{ 'COMPLEX.PHONE' | translate }}</label>
+            <input [(ngModel)]="complex.compPhon" name="compPhon" class="form-control" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">{{ 'COMPLEX.EMAIL' | translate }}</label>
+            <input [(ngModel)]="complex.compEmail" name="compEmail" type="email" class="form-control" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">{{ 'COMPLEX.ADDRESS' | translate }}</label>
+            <input [(ngModel)]="complex.compAddress" name="compAddress" class="form-control" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">{{ 'COMPLEX.COMPANY' | translate }}</label>
+            <select [(ngModel)]="complex.compComId" name="compComId" class="form-control">
+              <option *ngFor="let company of companies()" [value]="company.id">{{ company.comArName }}</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">{{ 'COMPLEX.IMAGE' | translate }}</label>
+            <input [(ngModel)]="complex.compImagePath" name="compImagePath" class="form-control" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">{{ 'ACTIONS.SAVE' | translate }}</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'ACTIONS.CANCEL' | translate }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
